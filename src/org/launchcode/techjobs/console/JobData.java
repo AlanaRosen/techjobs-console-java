@@ -10,6 +10,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by LaunchCode
@@ -25,7 +26,7 @@ public class JobData {
      * Fetch list of all values from loaded data,
      * without duplicates, for a given column.
      *
-     * @param field The column to retrieve values from
+     * @param field is the parameter that represents the column to retrieve values from
      * @return List of all of the values of the given field
      */
     public static ArrayList<String> findAll(String field) {
@@ -38,7 +39,7 @@ public class JobData {
         for (HashMap<String, String> row : allJobs) {
             String aValue = row.get(field);
 
-            if (!values.contains(aValue)) {
+            if (!(values.contains(aValue))) {
                 values.add(aValue);
             }
         }
@@ -53,6 +54,24 @@ public class JobData {
 
         return allJobs;
     }
+    // search that looks through all of the values for the specific search term
+    public static ArrayList<HashMap<String, String>>  findByValue (String searchTerm) {
+        // just in case
+        loadData();
+        // establish list of jobs to print
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        for (HashMap<String,String> job : allJobs) {
+            for (Map.Entry<String, String> x : job.entrySet()) {
+                if (x.getValue().toLowerCase().contains(searchTerm.toLowerCase())) {
+                    jobs.add(job);
+                    break;
+                }
+            }
+        }
+
+        return jobs;
+    }
 
     /**
      * Returns results of search the jobs data by key/value, using
@@ -62,7 +81,7 @@ public class JobData {
      * with "Enterprise Holdings, Inc".
      *
      * @param column   Column that should be searched.
-     * @param value Value of teh field to search for
+     * @param value Value of the field to search for
      * @return List of all jobs matching the criteria
      */
     public static ArrayList<HashMap<String, String>> findByColumnAndValue(String column, String value) {
@@ -76,7 +95,7 @@ public class JobData {
 
             String aValue = row.get(column);
 
-            if (aValue.contains(value)) {
+            if (aValue.toLowerCase().contains(value.toLowerCase())) {
                 jobs.add(row);
             }
         }
